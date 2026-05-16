@@ -1,12 +1,3 @@
-// exports.main = async function (event, context) {
-//   return {
-//     statusCode: 200,
-//     body: JSON.stringify({
-//       message: `Hello, I will read from ${process.env.SPACE_FINDER_TABLE_NAME}`,
-//     }),
-//   };
-// };
-
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
@@ -18,6 +9,7 @@ import getSpaces from "./GetSpaces";
 import updateSpace from "./UpdateSpace";
 import deleteSpace from "./DeleteSpace";
 import { JSONValidationError, MissingFieldError } from "../shared/Validator";
+import { addCorsHeaders } from "../shared/Utils";
 
 const dbClient = new DynamoDBClient({});
 
@@ -25,55 +17,60 @@ async function handler(
   event: APIGatewayProxyEvent,
   context: Context,
 ): Promise<APIGatewayProxyResult> {
+  let response: APIGatewayProxyResult;
   try {
-    let message: string;
     switch (event.httpMethod) {
       case "GET":
         const getResponse = await getSpaces(event, dbClient);
-        return getResponse;
+        response = getResponse;
+        break;
       case "POST":
         const postResponse = await postSpaces(event, dbClient);
-        return postResponse;
+        response = postResponse;
+        break;
       case "PUT":
         const updateResponse = await updateSpace(event, dbClient);
-        return updateResponse;
+        response = updateResponse;
+        break;
       case "DELETE":
         const deleteResponse = await deleteSpace(event, dbClient);
-        return deleteResponse;
-      default:
-        message = "Invalid request method";
+        response = deleteResponse;
         break;
+      default:
+        return addCorsHeaders({
+          statusCode: 400,
+          body: JSON.stringify({
+              message: "Invalid request method",
+            }),
+          });
     }
-    const response: APIGatewayProxyResult = {
-      statusCode: 200,
-      body: message,
-    };
-    return response;
   } catch (error) {
     console.error(error);
     if (error instanceof MissingFieldError) {
-      return {
+      return addCorsHeaders({
         statusCode: 400,
         body: JSON.stringify({
           message: error.message,
         }),
-      };
+      });
     }
     if (error instanceof JSONValidationError) {
-      return {
+      return addCorsHeaders({
         statusCode: 400,
         body: JSON.stringify({
           message: error.message,
         }),
-      };
+      });
     }
-    return {
+    return addCorsHeaders({
       statusCode: 500,
       body: JSON.stringify({
         message: (error as Error).message,
       }),
-    };
+    });
   }
+  response = addCorsHeaders(response);
+  return response;
 }
 
 export { handler };

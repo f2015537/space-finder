@@ -22,3 +22,9 @@ cdk.out/
 
 # OS
 .DS_Store
+
+# CDK outputs
+infra-outputs.json
+
+# Frontend build output
+frontend/dist

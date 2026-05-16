@@ -5,6 +5,8 @@ import {
   LambdaIntegration,
   MethodOptions,
   RestApi,
+  ResourceOptions,
+  Cors,
 } from "aws-cdk-lib/aws-apigateway";
 import { IUserPool } from "aws-cdk-lib/aws-cognito";
 import { Construct } from "constructs";
@@ -38,7 +40,18 @@ export class ApiStack extends Stack {
       },
     };
 
-    const spaceFinderResource = api.root.addResource("spaceFinder");
+    const optionsWithCors: ResourceOptions = {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: Cors.ALL_METHODS,
+      },
+    };
+
+    const spaceFinderResource = api.root.addResource(
+      "spaceFinder",
+      optionsWithCors,
+    );
+
     spaceFinderResource.addMethod(
       "GET",
       props.spacesLambdaIntegration,
