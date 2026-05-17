@@ -18,19 +18,6 @@ export class UIDeploymentStack extends Stack {
       bucketName: `space-finder-frontend-bucket-${suffix}`,
     });
 
-    const uiDirectory = path.join(__dirname, "../../../frontend/dist");
-    if (!existsSync(uiDirectory)) {
-      console.warn(`UI directory not found: ${uiDirectory}`);
-      return;
-    }
-
-    new BucketDeployment(this, "SpaceFinderUIDeployment", {
-      sources: [Source.asset(uiDirectory)],
-      destinationBucket: bucket,
-      prune: true,
-      retainOnDelete: false,
-    });
-
     const s3Origin = S3BucketOrigin.withOriginAccessControl(bucket, {
       originAccessLevels: [AccessLevel.READ],
     });
@@ -40,6 +27,33 @@ export class UIDeploymentStack extends Stack {
         origin: s3Origin,
       },
       defaultRootObject: "index.html",
+      errorResponses: [
+        {
+          httpStatus: 403,
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
+        },
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
+        },
+      ],
+    });
+
+    const uiDirectory = path.join(__dirname, "../../../frontend/dist");
+    if (!existsSync(uiDirectory)) {
+      console.warn(`UI directory not found: ${uiDirectory}`);
+      return;
+    }
+
+    new BucketDeployment(this, "SpaceFinderUIDeployment", {
+      sources: [Source.asset(uiDirectory)],
+      destinationBucket: bucket,
+      distribution,
+      distributionPaths: ["/*"],
+      prune: true,
+      retainOnDelete: false,
     });
 
     new CfnOutput(this, "UIDeploymentDistributionDomainName", {

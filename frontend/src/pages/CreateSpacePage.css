@@ -1,0 +1,132 @@
+.create-space-page {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  padding: 40px 16px;
+}
+
+.create-space-card {
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.create-space-card h1 {
+  font-size: 26px;
+  margin: 0 0 6px;
+}
+
+.create-space-subtitle {
+  font-size: 14px;
+  color: var(--text);
+  margin: 0 0 28px;
+}
+
+.create-space-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.form-field input[type="text"] {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.form-field input[type="text"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.form-field input[type="file"] {
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.photo-preview {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-subtle, #f9f9f9);
+}
+
+.photo-preview img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.form-error {
+  font-size: 13px;
+  color: #e53e3e;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(229, 62, 62, 0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(229, 62, 62, 0.25);
+}
+
+.btn-submit {
+  margin-top: 8px;
+  padding: 11px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-submit:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.success-message {
+  font-size: 15px;
+  color: var(--text);
+  margin: 12px 0 4px;
+}
+
+.success-id {
+  font-size: 13px;
+  color: var(--text);
+  font-family: monospace;
+}

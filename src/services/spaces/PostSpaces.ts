@@ -11,9 +11,9 @@ export default async function postSpaces(
   const randomId = idGenerator();
   const item = parseJson(event.body || "{}");
   item.id = randomId;
+  item.userId = event.requestContext.authorizer?.claims?.sub;
   validateAsSpaceEntry(item);
   const marshalledItem = marshall(item);
-  console.log(event);
   const result = await dbClient.send(
     new PutItemCommand({
       TableName: process.env.SPACE_FINDER_TABLE_NAME,
@@ -21,7 +21,7 @@ export default async function postSpaces(
     }),
   );
 
-  console.log(result);
+  console.log("PutItem result:", result.$metadata.httpStatusCode);
   return {
     statusCode: 201,
     body: JSON.stringify({

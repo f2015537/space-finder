@@ -10,8 +10,10 @@ const app = new App();
 const dataStack = new DataStack(app, "DataStack");
 const lambdaStack = new LambdaStack(app, "LambdaStack", {
   spaceFinderTable: dataStack.spaceFinderTable,
+  photosBucket: dataStack.photosBucket,
 });
 const authStack = new AuthStack(app, "AuthStack");
+authStack.addPhotoUploadPermission(dataStack.photosBucket);
 new ApiStack(app, "ApiStack", {
   spacesLambdaIntegration: lambdaStack.spacesLambdaIntegration,
   userPool: authStack.userPool,

@@ -12,6 +12,7 @@ import {
   PolicyStatement,
   Role,
 } from "aws-cdk-lib/aws-iam";
+import { IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 
 export class AuthStack extends Stack {
@@ -143,6 +144,16 @@ export class AuthStack extends Stack {
         resources: ["*"],
       }),
     );
+  }
+
+  public addPhotoUploadPermission(bucket: IBucket) {
+    const statement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:PutObject"],
+      resources: [bucket.arnForObjects("*")],
+    });
+    this.authenticatedRole.addToPolicy(statement);
+    this.adminsRole.addToPolicy(statement);
   }
 
   private attachRoles() {

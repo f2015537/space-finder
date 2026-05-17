@@ -2,15 +2,20 @@ import { Amplify } from "aws-amplify";
 import { fetchAuthSession, signIn, SignInOutput } from "@aws-amplify/auth";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { join } from "path";
 
-const awsRegion = "us-west-2";
+process.loadEnvFile(join(__dirname, ".env"));
+
+const awsRegion = process.env.AWS_REGION!;
+const userPoolId = process.env.USER_POOL_ID!;
+const identityPoolId = process.env.IDENTITY_POOL_ID!;
 
 Amplify.configure({
   Auth: {
     Cognito: {
-      userPoolId: "us-west-2_IMFEiBFWl",
-      userPoolClientId: "atctpor9vfm35nn52oodqke06",
-      identityPoolId: "us-west-2:80d0f433-fbbb-411d-9f10-ff0361b6e14c",
+      userPoolId,
+      userPoolClientId: process.env.USER_POOL_CLIENT_ID!,
+      identityPoolId,
     },
   },
 });
@@ -34,12 +39,12 @@ export class AuthService {
 
   public async generateCredentials() {
     const idToken = await this.getIdToken();
-    const congnitoIdentityPool = `cognito-idp.${awsRegion}.amazonaws.com/us-west-2_IMFEiBFWl`;
+    const cognitoIdentityPool = `cognito-idp.${awsRegion}.amazonaws.com/${userPoolId}`;
     const cognitoIdentity = new CognitoIdentityClient({
       credentials: fromCognitoIdentityPool({
-        identityPoolId: "us-west-2:80d0f433-fbbb-411d-9f10-ff0361b6e14c",
+        identityPoolId,
         logins: {
-          [congnitoIdentityPool]: idToken,
+          [cognitoIdentityPool]: idToken,
         },
       }),
     });
