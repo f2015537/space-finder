@@ -4,7 +4,7 @@ import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { join } from "path";
 
-process.loadEnvFile(join(__dirname, ".env"));
+process.loadEnvFile(join(__dirname, "..", ".env"));
 
 const awsRegion = process.env.AWS_REGION!;
 const userPoolId = process.env.USER_POOL_ID!;

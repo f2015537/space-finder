@@ -1,9 +1,17 @@
 import { App } from "aws-cdk-lib";
+import { join } from "path";
+
+try {
+  process.loadEnvFile(join(__dirname, "..", "..", ".env"));
+} catch {
+  // no .env file present — env vars must be set externally
+}
 import { DataStack } from "./stacks/DataStack";
 import { LambdaStack } from "./stacks/LambdaStack";
 import { ApiStack } from "./stacks/ApiStack";
 import { AuthStack } from "./stacks/AuthStack";
 import { UIDeploymentStack } from "./stacks/UIDeploymentStack";
+import { MonitorStack } from "./stacks/MonitorStack";
 
 const app = new App();
 
@@ -19,3 +27,7 @@ new ApiStack(app, "ApiStack", {
   userPool: authStack.userPool,
 });
 new UIDeploymentStack(app, "UIDeploymentStack");
+
+new MonitorStack(app, "MonitorStack", {
+  webhookUrl: process.env.MONITOR_WEBHOOK_URL!,
+});
