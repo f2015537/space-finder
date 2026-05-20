@@ -10,6 +10,7 @@ cdk.out/
 *.d.ts
 !jest.config.js
 !cdk.json
+!frontend/src/vite-env.d.ts
 
 # Environment and secrets
 .env
