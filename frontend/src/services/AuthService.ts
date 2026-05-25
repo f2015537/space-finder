@@ -17,6 +17,15 @@ Amplify.configure({
       userPoolId: import.meta.env.VITE_USER_POOL_ID,
       userPoolClientId: import.meta.env.VITE_USER_POOL_CLIENT_ID,
       identityPoolId: import.meta.env.VITE_IDENTITY_POOL_ID,
+      loginWith: {
+        oauth: {
+          domain: import.meta.env.VITE_OAUTH_DOMAIN || "localhost",
+          scopes: ["email", "profile", "openid"],
+          redirectSignIn: [import.meta.env.VITE_OAUTH_REDIRECT_SIGNIN || "http://localhost:5173/"],
+          redirectSignOut: [import.meta.env.VITE_OAUTH_REDIRECT_SIGNOUT || "http://localhost:5173/"],
+          responseType: "code",
+        },
+      },
     },
   },
 });
