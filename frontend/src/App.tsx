@@ -86,7 +86,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        <Route path="/login" element={<LoginPage onLogin={handleLogin} authService={authService} />} />
         <Route
           path="/signup"
           element={
